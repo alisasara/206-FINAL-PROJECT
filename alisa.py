@@ -1,4 +1,3 @@
-
 import unittest
 import sqlite3
 import json
@@ -7,8 +6,8 @@ import requests
 import matplotlib.pyplot as plt
 
 API_KEY = "MzA4MzEwNTV8MTY3MDM0MDc3My44MTMzMjk"
-page_num = "100"
-JSON_LINK = "https://api.seatgeek.com/2/events?client_id=MzA4MzEwNTV8MTY3MDM0MDc3My44MTMzMjk&per_page=100"
+page_num = "110"
+JSON_LINK = "https://api.seatgeek.com/2/events?client_id=MzA4MzEwNTV8MTY3MDM0MDc3My44MTMzMjk&per_page=110"
 
 
 
@@ -34,7 +33,7 @@ def create_venues_table(cur, conn):
     conn.commit()
 
 def create_events_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS seatgeek (id INTEGER PRIMARY KEY, type TEXT, name TEXT, venue TEXT, time TEXT, state TEXT)')
+    cur.execute('CREATE TABLE IF NOT EXISTS seatgeek (id INTEGER PRIMARY KEY, type_id INTEGER, name TEXT, venue_id INTEGER, time TEXT, state_id TEXT)')
     conn.commit()
 
 def add_events_from_json(cur, conn):
@@ -68,19 +67,6 @@ def add_events_from_json(cur, conn):
         name = items['performers'][0]['name']
         names.append(name)
         # add in counter variable  and then have a for loop with if statement to break if counter = 25 
-        # 25 count limit 
-    counter = cur.execute("SELECT max(id) FROM seatgeek").fetchone()[0]
-    print(counter)
-    if counter == None: 
-        counter = 0
-    for i in range(counter, counter + 25):
-        # seatgeek main table info
-        try: 
-            cur.execute('INSERT OR IGNORE INTO seatgeek (id, type, name, venue, time, state) VALUES (?,?,?,?,?,?)', (ids[i], types[i], names[i], venues[i], times[i], states[i]))
-        except: 
-            print("exceeds 100")
-    
-    
     types_dict = {}
     for t in types:
         if t in types_dict:
@@ -118,23 +104,92 @@ def add_events_from_json(cur, conn):
     venues_list = []
     for keys in venues_dict.keys():
         venues_list.append(keys)
-    for i in range(len(states_list)):
+    for i in range(len(venues_list)):
         cur.execute("INSERT OR IGNORE INTO venues (id,type) VALUES (?,?)",(i,venues_list[i]))
         conn.commit()
+       
+    # 25 count limit 
+    counter = cur.execute("SELECT max(id) FROM seatgeek").fetchone()[0]
+    print(counter)
+    if counter == None: 
+        counter = 0
+    for i in range(counter, counter + 25):
+        if i >= 100:
+            break
+        # seatgeek main table info
+        cur.execute('SELECT id FROM event_types WHERE type = ?',(types[i],))
+        type_id = cur.fetchone()[0]
+        cur.execute('SELECT id FROM venues WHERE type = ?',(venues[i],))
+        venue_id = cur.fetchone()[0]
+        try:
+            cur.execute('SELECT id FROM states WHERE type = ?',(states[i],))
+            state_id = cur.fetchone()[0]
+        except:
+            print("state info not found")
+        try: 
+            cur.execute('INSERT OR IGNORE INTO seatgeek (id, type_id, name, venue_id, time, state_id) VALUES (?,?,?,?,?,?)', (ids[i], type_id, names[i], venue_id, times[i], state_id))
+        except: 
+            print("exceeds 100")
+        conn.commit()
+
+def events_calculations(cur, conn):
+    calc_dict = {}
+    calc_list = []
+    sorted_calc = []
+    cur.execute("SELECT state_id FROM seatgeek")
+    calc = cur.fetchall()
+    for items in calc:
+        # print(items)
+        if items in calc_dict:
+            calc_dict[items] += 1
+        else:
+            calc_dict[items] = 1
+    # print(calc_dict)
+    for k,v in calc_dict.items():
+        calc_list.append((k,v))
+    sorted_calc = sorted(calc_list, key = lambda x: x[1], reverse = True)
+    # print(sorted_calc)
+    try: 
+        max_events = sorted_calc[0][0][0]
+    # print(max_events)
+        cur.execute('SELECT type FROM states WHERE id = ?', (max_events,))
+        max_events_state = cur.fetchall()
+        print(max_events_state[0][0])
+        print("the state with the most events is " + max_events_state[0][0])
+    except:
+        print("database not fully created yet")
+    return sorted_calc
+
+    # create visualization 
+    # plt.figure()
+def seatgeek_visualization(cur, conn):
+    plt.figure()
+    x_axis = []
+    y_axis = []
+    values = events_calculations(cur, conn)
+    print(values)
+    for v in range(len(values)):
+        # print(values[v][0][0])
+        # print(values[v][1])
+        cur.execute('SELECT type FROM states WHERE id = ?',(values[v][0][0],))
+        x = cur.fetchall()
+        x_axis.append(x[0][0])
+        y_axis.append(values[v][1])
+        # print(x[0][0])
+    print(x_axis)
+    print(y_axis)
+
+    fig = plt.figure(figsize = (10,5))
+    plt.bar(x_axis, y_axis, color ='purple', width = .5)
+    plt.xlabel("State")
+    plt.ylabel("Number of Events")
+    plt.title("Number of Event per State")
+    plt.show()
+    
 
 
-def count_item_in_data_base(cur, conn):
-    cur.execute("SELECT * FROM seatgeek")
-    items = cur.fetchall()
-    return len(items)
         
-      
    
-
-   
-
-# query db- sele t count of column or sleect everything and count in python and then returns number - thne input 25 
-# index events from [x:x]
 
 def main():
     cur, conn = setUpDatabase('TRAVEL_db')
@@ -142,8 +197,9 @@ def main():
     create_types_table(cur, conn)
     create_states_table(cur, conn)
     create_venues_table(cur, conn)
-    count_item_in_data_base(cur, conn)
+    events_calculations(cur, conn)
     add_events_from_json(cur, conn)
+    seatgeek_visualization(cur, conn)
 
 
 if __name__ == "__main__":
