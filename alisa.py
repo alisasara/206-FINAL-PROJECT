@@ -175,20 +175,14 @@ def seatgeek_visualization_and_csv(cur, conn):
         x = cur.fetchall()
         x_axis.append(x[0][0])
         y_axis.append(values[v][1])
-        # print(x[0][0])
-    # print(x_axis)
-    # print(y_axis)
-    # for x in range(len(x_axis)):
-    #     calculations_dict[x_axis[x]] = y_axis[x]
-    # print(calculations_dict)
+
     with open("events.txt", 'w') as f:
         for i in range(len(x_axis)):
             if y_axis[i] == 1:
                 f.write("There is " + str(y_axis[i]) + " event happening in " + x_axis[i] + "\n")
             else:  
                 f.write("There are " + str(y_axis[i]) + " events happening in " + x_axis[i] + "\n")
-    
-    
+   
     fig = plt.figure(figsize = (10,5))
     plt.bar(x_axis, y_axis, color ='purple', width = .5)
     plt.xlabel("State")
