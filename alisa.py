@@ -43,7 +43,6 @@ def add_events_from_json(cur, conn):
     r = requests.get(request_url, params = param_dict)
     data = r.text
     json_data = json.loads(data) # decoding JSON file
-    
 
     ids = []
     types = []
@@ -162,12 +161,13 @@ def events_calculations(cur, conn):
 
     # create visualization 
     # plt.figure()
-def seatgeek_visualization(cur, conn):
+def seatgeek_visualization_and_csv(cur, conn):
+    calculations_dict = {}
     plt.figure()
     x_axis = []
     y_axis = []
     values = events_calculations(cur, conn)
-    print(values)
+    # print(values)
     for v in range(len(values)):
         # print(values[v][0][0])
         # print(values[v][1])
@@ -176,15 +176,26 @@ def seatgeek_visualization(cur, conn):
         x_axis.append(x[0][0])
         y_axis.append(values[v][1])
         # print(x[0][0])
-    print(x_axis)
-    print(y_axis)
-
+    # print(x_axis)
+    # print(y_axis)
+    # for x in range(len(x_axis)):
+    #     calculations_dict[x_axis[x]] = y_axis[x]
+    # print(calculations_dict)
+    with open("events.txt", 'w') as f:
+        for i in range(len(x_axis)):
+            if y_axis[i] == 1:
+                f.write("There is " + str(y_axis[i]) + " event happening in " + x_axis[i] + "\n")
+            else:  
+                f.write("There are " + str(y_axis[i]) + " events happening in " + x_axis[i] + "\n")
+    
+    
     fig = plt.figure(figsize = (10,5))
     plt.bar(x_axis, y_axis, color ='purple', width = .5)
     plt.xlabel("State")
     plt.ylabel("Number of Events")
     plt.title("Number of Event per State")
     plt.show()
+
     
 
 
@@ -199,7 +210,7 @@ def main():
     create_venues_table(cur, conn)
     events_calculations(cur, conn)
     add_events_from_json(cur, conn)
-    seatgeek_visualization(cur, conn)
+    seatgeek_visualization_and_csv(cur, conn)
 
 
 if __name__ == "__main__":
