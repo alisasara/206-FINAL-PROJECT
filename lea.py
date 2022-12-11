@@ -114,7 +114,7 @@ def set_up_table(data, cur, conn):
     
 
     counter = cur.execute("SELECT max(ranking) FROM restaurants").fetchone()[0]
-    print(counter)
+    # print(counter)
     if counter == None: 
         counter = 0
     for i in range(counter, counter + 25):
@@ -170,7 +170,7 @@ def highest_rank(state,cur,conn):
         cur.execute('SELECT restaurants.name, restaurants.ranking  FROM restaurants JOIN restaurant_states WHERE restaurants.state_id = restaurant_states.state_id  AND restaurant_states.state = ?', (state, ))
         tups = cur.fetchall()
         print(tups)
-        print("\n")
+        
     
         name_list = []
         for tup in tups:
@@ -188,12 +188,12 @@ def highest_rank(state,cur,conn):
     
     pass
 
-def restaurants_visualization(cur, conn):
+def restaurants_visualization_and_csv(cur, conn):
     plt.figure()
    
 
     state_list = []
-    cur.execute("SELECT state FROM restaurant_states")
+    cur.execute("SELECT restaurant_states.state FROM restaurant_states JOIN restaurants WHERE restaurant_states.state_id = restaurants.state_id")
     states = cur.fetchall()
 
     for tup in states:
@@ -201,15 +201,25 @@ def restaurants_visualization(cur, conn):
     
     restaurant_count_lst = []
 
+    
+    ## using calculation functions to get count for each state
     for state in state_list:
         count = get_restaurant_count_state(state,cur,conn)
         restaurant_count_lst.append(count)
 
-    print(state_list)
-    print(restaurant_count_lst)
 
-    fig = plt.figure(figsize = (10,5))
+    with open("restaurants.txt", 'w') as f:
+        for i in range(len(state_list)):
+            if restaurant_count_lst[i] == 1:
+                f.write("There is " + str(restaurant_count_lst[i]) + " Yelp top rated restaurant in " + state_list[i] + "\n")
+            else:  
+                f.write("There are " + str(restaurant_count_lst[i]) + " Yelp top rated restaurants in " + state_list[i] + "\n")
+   
+
+    fig = plt.figure(figsize = (20,5))
     plt.bar(state_list, restaurant_count_lst, color ='blue', width = .5)
+    plt.xticks(rotation = 80)
+    plt.subplots_adjust(bottom = .3)
     plt.xlabel("State")
     plt.ylabel("Number of Yelp Top 100 Restaurants")
     plt.title("Number of Top Restaurants per State")
@@ -229,16 +239,17 @@ def main():
     create_cuisine_table(cur, conn)
     set_up_table(data, cur, conn)
 
-    ## state count calculation 
+    ## state count calculation
+    # choose state based on weather 
 
-    state = "Florida"
+    state = "Michigan"
     get_restaurant_count_state(state,cur,conn)
 
     ##highest ranking restaurant in state
     highest_rank(state,cur,conn)
 
     ##visualization 
-    restaurants_visualization(cur, conn)
+    restaurants_visualization_and_csv(cur, conn)
 
     
 
