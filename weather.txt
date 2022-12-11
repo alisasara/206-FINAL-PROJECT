@@ -1,0 +1,17 @@
+Below are the cities that best match your ideal temperature of 55 degrees:
+Los Angeles: The temperature in Los Angeles is 54.84.
+Dallas: The temperature in Dallas is 55.9.
+Fort Worth: The temperature in Fort Worth is 55.31.
+Denver: The temperature in Denver is 55.08.
+El Paso: The temperature in El Paso is 54.73.
+Colorado Springs: The temperature in Colorado Springs is 55.11.
+Virginia Beach: The temperature in Virginia Beach is 55.63.
+Arlington: The temperature in Arlington is 55.4.
+Aurora: The temperature in Aurora is 54.37.
+Henderson: The temperature in Henderson is 54.68.
+Plano: The temperature in Plano is 54.82.
+Madison: The temperature in Madison is 54.7.
+Irving: The temperature in Irving is 55.53.
+Los Angeles: The temperature in Los Angeles is 54.84.
+Garland: The temperature in Garland is 55.22.
+Arlington: The temperature in Arlington is 55.29.
