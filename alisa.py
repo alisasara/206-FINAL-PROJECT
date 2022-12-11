@@ -214,6 +214,14 @@ def seatgeek_visualization_and_txt(cur, conn):
     plt.title("Number of Event per State")
     plt.show()
 
+    # extra graph 
+    plt.figure()
+    plt.scatter(x_axis, y_axis)
+    plt.title("Number of Events per State")
+    plt.xlabel("State")
+    plt.ylabel("Number of Events")
+    plt.show()
+
     
 
 

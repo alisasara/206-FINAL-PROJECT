@@ -1,8 +1,5 @@
-Below are the cities that best match your ideal temperature of 40 degrees:
-Philadelphia: The temperature in Philadelphia is 40.82.
-Columbus: The temperature in Columbus is 40.32.
-Kansas City: The temperature in Kansas City is 39.42.
-Columbus: The temperature in Columbus is 40.32.
-St Louis: The temperature in St Louis is 39.6.
-Fort Wayne: The temperature in Fort Wayne is 39.2.
-Boise: The temperature in Boise is 39.43.
+Below are the cities that best match your ideal temperature of 66 degrees:
+Phoenix: The temperature in Phoenix is 66.88.
+Austin: The temperature in Austin is 65.48.
+El Paso: The temperature in El Paso is 65.3.
+Glendale: The temperature in Glendale is 66.54.
