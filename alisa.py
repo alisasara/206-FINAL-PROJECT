@@ -192,9 +192,6 @@ def seatgeek_visualization_and_txt(cur, conn):
     
 
 
-        
-   
-
 def main():
     cur, conn = setUpDatabase('TRAVEL_db')
     create_events_table(cur, conn)
@@ -204,6 +201,7 @@ def main():
     events_calculations(cur, conn)
     add_events_from_json(cur, conn)
     seatgeek_visualization_and_txt(cur, conn)
+
 
 
 if __name__ == "__main__":

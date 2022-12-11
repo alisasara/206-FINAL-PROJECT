@@ -4,6 +4,7 @@ import re
 import csv
 import os
 import sqlite3
+import matplotlib.pyplot as plt
 
 
 #This function uses beautiful soup to pull data from the yelp TOP 100 webpage
@@ -113,7 +114,7 @@ def set_up_table(data, cur, conn):
     
 
     counter = cur.execute("SELECT max(ranking) FROM restaurants").fetchone()[0]
-    print(counter)
+    # print(counter)
     if counter == None: 
         counter = 0
     for i in range(counter, counter + 25):
@@ -143,12 +144,86 @@ def set_up_table(data, cur, conn):
    
 #Calculations:
   
-def get_restaurant_count_state(state):
-
-
+def get_restaurant_count_state(state,cur,conn):
+    
+    
+    cur.execute('SELECT COUNT (restaurants.state_id) FROM restaurants JOIN restaurant_states WHERE restaurants.state_id = restaurant_states.state_id  AND restaurant_states.state = ?', (state, ))
+    restaurant_count = cur.fetchone()[0]
+    
+    if restaurant_count < 1:
+        return(None)
+    else:
+        return(restaurant_count)
+     
+    
     pass
 
-#def highest_rank(state)
+def highest_rank(state,cur,conn):
+    
+    count = get_restaurant_count_state(state,cur,conn)
+    if count == None:
+        print("There are no Yelp top ranked restaurants in " + state + ".")
+        return None
+    else:
+        print("There are " + str(count) + " top rated restaurants in " + state +".")
+        
+        cur.execute('SELECT restaurants.name, restaurants.ranking  FROM restaurants JOIN restaurant_states WHERE restaurants.state_id = restaurant_states.state_id  AND restaurant_states.state = ?', (state, ))
+        tups = cur.fetchall()
+        print(tups)
+        
+    
+        name_list = []
+        for tup in tups:
+            name_list.append(tup[0])
+        names = ', '.join(name_list)
+        print('These restaurants are ' + names + ".")
+
+        max_rank = tups[0]
+        for tup in tups:
+            if tup[1]< max_rank[1]:
+                max_rank = tup
+    
+        print(max_rank[0] + " is the restaurant in " + state + " with the highest ranking of " + "#" + str(max_rank[1]) +".")
+    return(max_rank)
+    
+    pass
+
+def restaurants_visualization_and_csv(cur, conn):
+    plt.figure()
+   
+
+    state_list = []
+    cur.execute("SELECT restaurant_states.state FROM restaurant_states JOIN restaurants WHERE restaurant_states.state_id = restaurants.state_id")
+    states = cur.fetchall()
+
+    for tup in states:
+        state_list.append(tup[0])
+    
+    restaurant_count_lst = []
+
+    
+    ## using calculation functions to get count for each state
+    for state in state_list:
+        count = get_restaurant_count_state(state,cur,conn)
+        restaurant_count_lst.append(count)
+
+
+    with open("restaurants.txt", 'w') as f:
+        for i in range(len(state_list)):
+            if restaurant_count_lst[i] == 1:
+                f.write("There is " + str(restaurant_count_lst[i]) + " Yelp top rated restaurant in " + state_list[i] + "\n")
+            else:  
+                f.write("There are " + str(restaurant_count_lst[i]) + " Yelp top rated restaurants in " + state_list[i] + "\n")
+   
+
+    fig = plt.figure(figsize = (20,5))
+    plt.bar(state_list, restaurant_count_lst, color ='blue', width = .5)
+    plt.xticks(rotation = 80)
+    plt.subplots_adjust(bottom = .3)
+    plt.xlabel("State")
+    plt.ylabel("Number of Yelp Top 100 Restaurants")
+    plt.title("Number of Top Restaurants per State")
+    plt.show()
     
 
 
@@ -164,10 +239,20 @@ def main():
     create_cuisine_table(cur, conn)
     set_up_table(data, cur, conn)
 
+    ## state count calculation
+    # choose state based on weather 
+
+    state = "Michigan"
+    get_restaurant_count_state(state,cur,conn)
+
+    ##highest ranking restaurant in state
+    highest_rank(state,cur,conn)
+
+    ##visualization 
+    restaurants_visualization_and_csv(cur, conn)
+
     
 
-
-    
 
 
 main()
