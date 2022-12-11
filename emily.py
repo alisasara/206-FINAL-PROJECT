@@ -35,7 +35,6 @@ def create_weather_info(cur, conn):
         r = requests.get(request_url, params = param_dict)
         data = r.text
         json_data = json.loads(data) # decoding JSON file
-        # print(json_data)
         id = nums
         nums += 1 
         ids.append(id)
