@@ -104,11 +104,6 @@ def weather_calculations(cur, conn):
 
 
 
-
-
-
-
-
 def main():
     cur, conn = setUpDatabase('TRAVEL_db')
     create_weather_table(cur, conn)

@@ -13,9 +13,10 @@ import emily
 import lea
 
 def main():
+    emily.main()
     alisa.main()
     lea.main()
-    emily.main()
+
 
 
 if __name__ == "__main__":

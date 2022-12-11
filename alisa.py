@@ -160,7 +160,7 @@ def events_calculations(cur, conn):
 
     # create visualization 
     # plt.figure()
-def seatgeek_visualization_and_csv(cur, conn):
+def seatgeek_visualization_and_txt(cur, conn):
     calculations_dict = {}
     plt.figure()
     x_axis = []
@@ -182,7 +182,7 @@ def seatgeek_visualization_and_csv(cur, conn):
             else:  
                 f.write("There are " + str(y_axis[i]) + " events happening in " + x_axis[i] + "\n")
    
-    fig = plt.figure(figsize = (10,5))
+    fig = plt.figure(figsize = (20,20))
     plt.bar(x_axis, y_axis, color ='purple', width = .5)
     plt.xlabel("State")
     plt.ylabel("Number of Events")
@@ -203,7 +203,7 @@ def main():
     create_venues_table(cur, conn)
     events_calculations(cur, conn)
     add_events_from_json(cur, conn)
-    seatgeek_visualization_and_csv(cur, conn)
+    seatgeek_visualization_and_txt(cur, conn)
 
 
 if __name__ == "__main__":
