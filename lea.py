@@ -66,7 +66,7 @@ def create_restaurant_states_table(cur, conn):
     conn.commit()
 
 def create_city_table(cur, conn):
-    cur.execute("CREATE TABLE IF NOT EXISTS cities (city_id INTEGER PRIMARY KEY, city TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS restaurants_cities (city_id INTEGER PRIMARY KEY, city TEXT)")
     conn.commit()
 
 def create_cuisine_table(cur, conn):
@@ -101,7 +101,7 @@ def set_up_table(data, cur, conn):
         if city not in cities:
             cities.append(city)
     for i in range(len(cities)):
-        cur.execute("INSERT OR IGNORE INTO cities (city_id,city) VALUES (?,?)",(i,cities[i]))
+        cur.execute("INSERT OR IGNORE INTO restaurants_cities (city_id,city) VALUES (?,?)",(i,cities[i]))
         conn.commit()
     
     ##creating cuisine ids 
@@ -122,7 +122,7 @@ def set_up_table(data, cur, conn):
             break
         cur.execute('SELECT cuisine_id FROM cuisine_types WHERE cuisine = ?',(main_lst[2][i],))
         cuisine_id = cur.fetchone()[0]
-        cur.execute('SELECT city_id FROM cities WHERE city = ?',(main_lst[3][i],))
+        cur.execute('SELECT city_id FROM restaurants_cities WHERE city = ?',(main_lst[3][i],))
         city_id = cur.fetchone()[0]
         cur.execute('SELECT state_id FROM restaurant_states WHERE state = ?',(main_lst[4][i],))
         state_id = cur.fetchone()[0]
@@ -242,7 +242,7 @@ def main():
     ## state count calculation
     # choose state based on weather 
 
-    state = "Michigan"
+    state = input("Enter a state to view top rated restaurants: ")
     get_restaurant_count_state(state,cur,conn)
 
     ##highest ranking restaurant in state
@@ -255,4 +255,5 @@ def main():
 
 
 
-main()
+if __name__ == "__main__":
+    main()

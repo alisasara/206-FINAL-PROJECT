@@ -4,6 +4,7 @@ import json
 import os
 import requests
 import matplotlib.pyplot as plt
+import numpy as np
 
 JSON_LINK = "https://api.openweathermap.org/data/2.5/weather?q={}k&units={}&appid={}"
 API_KEY = "ac432d87c69ca67d59caed32d101128c"
@@ -49,7 +50,7 @@ def create_weather_info(cur, conn):
     # print(names)
 
     counter = cur.execute("SELECT max(ids) FROM weather").fetchone()[0]
-    print(counter)
+    print("counter: " + str(counter))
     if counter == None: 
         counter = 0
     for i in range(counter, counter + 25):
@@ -100,7 +101,14 @@ def weather_calculations(cur, conn):
         f.write("\n")
         for i in range(len(ideal_cities)):
             f.write(ideal_cities[i] + ": The temperature in " + str(ideal_cities[i]) + " is " + str(temp_diff_list[i]) + "." +"\n")
+    
 
+    plt.figure()
+    plt.scatter(ideal_cities, temp_diff_list)
+    plt.title("City Temperatures")
+    plt.xlabel("Cities")
+    plt.ylabel("Temperatures")
+    plt.show()
 
 
 

@@ -7,10 +7,13 @@ from bs4 import BeautifulSoup
 import re
 import csv
 import os
+import numpy as np
 
 import alisa
 import emily
 import lea
+
+
 
 def main():
     emily.main()
