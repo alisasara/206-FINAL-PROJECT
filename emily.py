@@ -26,7 +26,7 @@ def create_weather_table(cur, conn):
         r = requests.get(request_url, params = param_dict)
         data = r.text
         json_data = json.loads(data) # decoding JSON file
-        print(json_data)
+        # print(json_data)
     
 
 
