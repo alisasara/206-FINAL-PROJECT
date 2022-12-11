@@ -1,0 +1,3 @@
+Below are the cities that best match your ideal temperature of 70 degrees:
+San Antonio: The temperature in San Antonio is 70.43.
+Laredo: The temperature in Laredo is 70.09.
