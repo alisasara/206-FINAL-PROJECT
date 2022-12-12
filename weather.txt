@@ -1,5 +1,9 @@
-Below are the cities that best match your ideal temperature of 66 degrees:
-Phoenix: The temperature in Phoenix is 66.88.
-Austin: The temperature in Austin is 65.48.
-El Paso: The temperature in El Paso is 65.3.
-Glendale: The temperature in Glendale is 66.54.
+Below are the cities that best match your ideal temperature of 55 degrees:
+Phoenix: The temperature in Phoenix is 55.15.
+Charlotte: The temperature in Charlotte is 55.69.
+Denver: The temperature in Denver is 54.61.
+Mesa: The temperature in Mesa is 54.12.
+Aurora: The temperature in Aurora is 54.16.
+Chandler: The temperature in Chandler is 54.3.
+Gilbert: The temperature in Gilbert is 54.18.
+Glendale: The temperature in Glendale is 54.7.

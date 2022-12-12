@@ -217,7 +217,7 @@ def restaurants_visualization_and_csv(cur, conn):
    
 
     fig = plt.figure(figsize = (20,5))
-    plt.bar(state_list, restaurant_count_lst, color ='blue', width = .5)
+    plt.bar(state_list, restaurant_count_lst, color ='purple', width = .5)
     plt.xticks(rotation = 80)
     plt.subplots_adjust(bottom = .3)
     plt.xlabel("State")
